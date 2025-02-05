@@ -6,10 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class InventoryManager {
+public class D_InventoryManager {
 	private Connection conn;
 
-	public InventoryManager() {
+	public D_InventoryManager() {
 		// TODO Auto-generated constructor stub
 		conn = DatabaseConnection.getConnection();
 	}
@@ -20,8 +20,6 @@ public class InventoryManager {
 			ResultSet rs = stmt.executeQuery(query)){
 			
 			int index = 1;
-			System.out.println("| No. | Name | Category | KG Price | KG Stock | Expiration date |");
-			System.out.println("-----------------------------------------------------------------");
 			while (rs.next()) {
 				String nombre = rs.getString("nombre");
 				String categoria = rs.getString("categoria");
@@ -48,8 +46,6 @@ public class InventoryManager {
 			ResultSet rs = stmt.executeQuery(query)){
 			
 			int index = 1;
-			System.out.println("| No. | Name | Category | KG Price | KG Stock | Expiration date |");
-			System.out.println("-----------------------------------------------------------------");
 			while (rs.next()) {
 				String nombre = rs.getString("nombre");
 				String categoria = rs.getString("categoria");
@@ -73,9 +69,6 @@ public class InventoryManager {
 			ResultSet rs = stmt.executeQuery(query)){
 
 			int index = 1;
-			System.out.println("| No. | Name | Category | KG Price | KG Stock | Expiration date |");
-			System.out.println("-----------------------------------------------------------------");
-			
 			while (rs.next()) {		
 				String nombre = rs.getString("nombre");
 				String categoria = rs.getString("categoria");
