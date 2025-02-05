@@ -1,6 +1,8 @@
 package Main;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Locale;
@@ -113,10 +115,12 @@ public class Engine {
 				Date date = updtPdct.getDateByID(idProduct);
 				Date tempDate = null; // VALORES QUE EL USUARIO INSERTARA
 				
+				
+				// METODO PARA ASEGURAR QUE EL USUARIO METE UN FLOAT COMO PRECIO Y ES MAYOR A 0
 				while (tempPrice == 0) {
 				    System.out.println("\n" + name.toUpperCase() + " actual PRICE value:");
-				    System.out.println("Price - " + price + " €" );
-				    System.out.print("Insert the new price: ");
+				    System.out.println("Price - " + price + " € x KG" );
+				    System.out.print("Insert the new PRICE: ");
 				    
 				    if (scn.hasNextFloat()) {  // Verifica si hay un número flotante válido
 				        tempPrice = scn.nextFloat();
@@ -134,8 +138,50 @@ public class Engine {
 				    }
 				}
 				
-				System.out.println(tempPrice);
-				// updtPdct.getUpdateProduct(idProduct);// SI EL NOMBRE EXISTE SE PASA POR PARAMETRO A GET Y LO UPDATEA EN LA BBDD, MAYBE UN IF?
+				// METODO PARA ASEGURAR QUE EL USUARIO METE UN FLOAT COMO STOCK Y ES MAYOR A 0
+				while (tempStock == 0) {
+				    System.out.println("\n" + name.toUpperCase() + " actual STOCK value:");
+				    System.out.println("Price - " + stock + " KG" );
+				    System.out.print("Insert the new STOCK: ");
+				    
+				    if (scn.hasNextFloat()) {  // Verifica si hay un número flotante válido
+				    	tempStock = scn.nextFloat();
+				        scn.nextLine(); // Consumir el salto de línea para evitar problemas con nextLine()
+				        
+				        if (tempStock <= 0) { 
+				            System.out.println("Invalid input. STOCK has to be positive.");
+				            tempStock = 0; // Resetear tempPrice para continuar en el loop
+				            pause();
+				        }
+				    } else {
+				        System.out.println("Invalid input. Please enter a valid number.");
+				        scn.next(); // Descarta la entrada no válida
+				        pause();
+				    }
+				}
+				
+				// PARA DARLE FORMATO A LA FECHA
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy"); // Formato de fecha
+				dateFormat.setLenient(false);
+				
+				// METODO PARA ASEGURAR QUE EL USUARIO METE UN DATE VALIDO
+				while (tempDate == null) {
+				    System.out.println("\n" + name.toUpperCase() + " actual DATE value:");
+				    System.out.println("Stock - " + date);
+				    System.out.print("Insert the new date (dd/MM/yyyy): ");
+
+				    String input = scn.nextLine();
+
+				    try {
+				    	tempDate = new java.sql.Date(dateFormat.parse(input).getTime());
+				    } catch (ParseException e) {
+				        System.out.println("Invalid input. Please enter a valid date in format dd/MM/yyyy.");
+				        pause();
+				    }
+				}
+				
+				// UNA VEZ INTODUCIDOS CORRECTAMENTE LOS DATOS LOS UPDATEAMOS FINALMENTE
+				updtPdct.getUpdateProduct(idProduct, tempPrice, tempStock, tempDate);// SI EL NOMBRE EXISTE SE PASA POR PARAMETRO A GET Y LO UPDATEA EN LA BBDD, MAYBE UN IF?
 				break; 
 			}else {
 				System.out.println("Product dosen't exist, please try again.");

@@ -126,8 +126,22 @@ public class D_UpdateProduct {
 		return nombre;
 	}
 	
-	public void getUpdateProduct(int _id_product) {
+	public void getUpdateProduct(int _id_product, float _price, float _stock, Date _fecha) {
+		String query = "UPDATE Alimentos SET precio_x_kg = ?, stock = ?, fecha_caducidad = ? WHERE id_alimento = ?;";
 		
+		try(PreparedStatement ps = conn.prepareStatement(query)){
+			ps.setFloat(1, _price);
+			ps.setFloat(2, _stock);
+			ps.setDate(3, _fecha);
+			ps.setInt(4, _id_product);
+			
+			var count = ps.executeUpdate();
+			System.out.println("Succesful " + count + " added to BBDD");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("An ERROR has ocurred while trying to bring the fata from the BBDD in getUpdateProduct");
+			e.printStackTrace();
+		}
 		
 	}
 }
