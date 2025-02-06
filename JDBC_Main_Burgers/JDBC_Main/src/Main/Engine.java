@@ -13,12 +13,14 @@ public class Engine {
 	private D_InventoryManager invMan; // ¿ALOMEJOR HAY QUE PASARLE ALGO POR PARAMETRO?
 	private D_UpdateProduct updtPdct;
 	private Integer userOption;
+	private D_AddProduct addPdct;
 	
 	public Engine() {
 		scn = new Scanner(System.in);
 		scn.useLocale(Locale.US); // Asegura que los decimales se lean correctamente
 		invMan = new D_InventoryManager();
 		updtPdct = new D_UpdateProduct();
+		addPdct = new D_AddProduct();
 		userOption = -1;
 	}
 
@@ -38,21 +40,22 @@ public class Engine {
 			}
 
 			// SALE DEL BUCLE SI EL NUMERO ESTA EN ENTERE EL 0 Y LAS OPCIONES DE INVENTARIO
-			switch (this.userOption) {
-			case 1: // EN CASO DE IR AL INVENTARIO,EL USUARIO DECIDE QUE HACER AQUI
-				this.userOption = -1; // RESTART VARIABLE
-				invenotryLogic(); // METODO QUE HACE ELEGIR AL USUARIO ENTRE OTRO MENU Y LE LLEVA A LA CLASE INVENTORY MANAGER QUE SE ENCARGA DE TODO
-				break;
-			case 2: // ADD
-				break;
-			case 3:
-				this.userOption = -1;
-				updateLogic();
-				break;
-			default:
-				System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
-			}
-			
+				switch (this.userOption) {
+				case 1: // EN CASO DE IR AL INVENTARIO,EL USUARIO DECIDE QUE HACER AQUI
+					this.userOption = -1; // RESTART VARIABLE
+					invenotryLogic(); // METODO QUE HACE ELEGIR AL USUARIO ENTRE OTRO MENU Y LE LLEVA A LA CLASE INVENTORY MANAGER QUE SE ENCARGA DE TODO
+					break;
+				case 2: // ADD
+					this.userOption = -1;
+					this.addLogic();
+					break;
+				case 3:
+					this.userOption = -1;
+					updateLogic();
+					break;
+				default:
+					System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
+				}
 		}
 	}
 
@@ -93,6 +96,30 @@ public class Engine {
 			this.userOption = -1; // RESET VARIABLE
 		}
 
+	}
+	
+	public void addLogic() {
+		boolean encontrado = true;
+		System.out.println("\n- - - - - - - - ADD - - - - - - - - ");
+		this.invMan.getAll();
+		this.pause();
+		this.addPdct.getProveedores();
+		this.pause();
+		while ( encontrado == true ) {
+			System.out.println("Please insert the NAME of the product you want to add: ");
+			String name = scn.next();
+			System.out.println("Please insert the Category of the product you want to add (fruta, fruto_seco, verdura): ");
+			String category = scn.next();
+			System.out.println("Please insert the Id of the supplier you want to add the product: ");
+			int id = scn.nextInt();
+			//SI LA CATEGORIA NO ES NINGUNA DE LAS SIGUIENTES TENDRAS QUE VOLVER A METER LOS DATOS
+			if(category.equalsIgnoreCase("fruto_seco") || category.equalsIgnoreCase("verdura") || category.equalsIgnoreCase("fruta")) {
+				//SI SE HA PODIDO AÑADIR EL PRODUCTO ENCONTRDAO PASARA A VALER FALSE, POR LO QUE SALDRA DEL BUCLE
+				encontrado = this.addPdct.Add(name, category.toLowerCase(), id);
+			}else {
+				System.out.println(category + " is not a category");
+			}
+		}
 	}
 	
 	public void updateLogic() {
