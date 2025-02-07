@@ -13,6 +13,7 @@ public class Engine {
 	private Integer userOption;
 	private D_SupplierManagment suppMan;
 	private D_AddProduct addPdct;
+	private D_Order order;
 	
 	public Engine() {
 		invMan = new D_InventoryManager();
@@ -20,6 +21,7 @@ public class Engine {
 		addPdct = new D_AddProduct();
 		suppMan = new D_SupplierManagment();
 		userOption = -1;
+		order = new D_Order();
 	}
 
 	public void run() {
@@ -52,6 +54,10 @@ public class Engine {
 					this.userOption = -1;
 					updateLogic();
 					break;
+				case 4:
+					this.userOption = -1;
+					orderLogic();
+					break;
 				case 5:
 					this.userOption = -1;
 					supplierManagmentLogic();
@@ -60,6 +66,22 @@ public class Engine {
 					System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
 				}
 		}
+	}
+	
+	public void orderLogic() {
+		Scanner scn = new Scanner(System.in);
+		System.out.println("\n- - - - - - - - ORDER - - - - - - - - ");
+		boolean realizado = false;
+		this.invMan.getAll();
+		this.pause();
+		while(realizado == false) {
+			System.out.println("Please insert the NAME of the product you want to add: ");
+			String name = scn.next();
+			System.out.println("Please insert the CUANTITY of the product you want to order: ");
+			float cantidad = scn.nextFloat();
+			realizado = order.setOrder(name, cantidad);
+		}
+		pause();
 	}
 
 	public void invenotryLogic() {
@@ -105,7 +127,6 @@ public class Engine {
 	
 	public void addLogic() {
 		Scanner scn = new Scanner(System.in);
-		
 		boolean encontrado = true;
 		System.out.println("\n- - - - - - - - ADD - - - - - - - - ");
 		this.invMan.getAll(); // PONER DISPONIBLE PRODUCTS
@@ -127,6 +148,7 @@ public class Engine {
 				System.out.println(category + " is not a category");
 			}
 		}
+		pause();
 	}
 	
 	public void updateLogic() {

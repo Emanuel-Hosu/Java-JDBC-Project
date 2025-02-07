@@ -90,8 +90,9 @@ public class D_AddProduct {
 				String nombre = rs.getString("nombre");
 				String contacto = rs.getString("contacto");
 				String direccion = rs.getString("direccion");
+				String telefono = rs.getString("telefono");
 				System.out.println("Id: " + id + "\n - Name: " + nombre + "\n - Contact: " + contacto + "\n - Address: "
-						+ direccion);
+						+ direccion + "\n - Telephone: " + telefono);
 			}
 
 		} catch (SQLException e) {
