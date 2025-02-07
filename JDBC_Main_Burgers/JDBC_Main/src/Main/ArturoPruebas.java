@@ -15,6 +15,7 @@ public class ArturoPruebas {
 	private Integer userOption;
 	private D_AddProduct addPdct;
 	private D_Order order;
+	private D_Stadistic stats;
 	
 	public ArturoPruebas() {
 		scn = new Scanner(System.in);
@@ -24,6 +25,7 @@ public class ArturoPruebas {
 		addPdct = new D_AddProduct();
 		userOption = -1;
 		order = new D_Order();
+		stats = new D_Stadistic();
 	}
 
 	public void run() {
@@ -59,6 +61,9 @@ public class ArturoPruebas {
 					this.userOption = -1;
 					orderLogic();
 					break;
+				case 6: 
+					this.userOption = -1;
+					stadisticsLogic();
 				default:
 					System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
 				}
@@ -80,6 +85,47 @@ public class ArturoPruebas {
 		}
 	}
 
+	public void stadisticsLogic() {
+		while(this.userOption < 0 || this.userOption < 6) {
+			stadisticsMenu();
+			try {
+				this.userOption = this.scn.nextInt();
+				this.scn.nextLine(); // ASUMIR EL SALTO DE LINEA
+			} catch (Exception e) {
+				System.out.println("ERROR, input has to be a number from 0 to 5, please TRY AGAIN");
+				this.scn.nextLine(); // CONSUMIR ENTRADA PARA EVITAR UN SALTO DE LINEA
+				pause();
+			}
+			
+			switch (this.userOption) {
+			case 1: 
+				stats.expensive();
+				pause();
+				break;
+			case 2:
+				stats.cheaper();
+				pause();
+				break;
+			case 3:
+				stats.bestSellings();
+				pause();
+				break;
+			case 4:
+				stats.totalPrice();
+				pause();
+				break;
+			case 5:
+				stats.sellDetails();
+				pause();
+				break;
+			case 0: // EXIT
+				this.userOption = -1; // RESET VARIABLE
+				run(); // ALOMEJOR CAMBIAR ESTO XD?
+				break;
+			}
+		}
+	}
+	
 	public void invenotryLogic() {
 		while (this.userOption < 0 || this.userOption < 3) {
 			inventoryMenu();
@@ -254,6 +300,12 @@ public class ArturoPruebas {
 		System.out.println("\n- - - - - - - INVENTORY - - - - - - - ");
 		System.out.println("Please select an option:\n");
 		System.out.println("1. Non-expired products\n2. Expired productst\n3. List all products\n0. Back to menu"); // PENSAR
+	}
+	
+	public void stadisticsMenu() {
+		System.out.println("\n- - - - - - - STADISTICS - - - - - - - ");
+		System.out.println("Please select an option:\n");
+		System.out.println("1. More expensive \n2. Cheaper\n3. Best selling\n4. Total inventory\n5. Sale details\n0. Back to menu");
 	}
 
 	// METODO QUE ESPERA UN ENTER PARA SEGUIR
