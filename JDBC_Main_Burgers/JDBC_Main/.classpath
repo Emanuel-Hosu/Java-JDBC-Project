@@ -10,6 +10,6 @@
 			<attribute name="annotationpath" value="C:/Users/artur/OneDrive/Escritorio/2ºGS_DAM/JDBC_Project/JDBC_Project/JDBC_Main_Burgers/JDBC_Main/lib/mysql-connector-j-9.1.0.jar"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="C:/Users/artur/OneDrive/Escritorio/2ºGS_DAM/JDBC_Project/JDBC_Project/JDBC_Main_Burgers/JDBC_Main/lib/mysql-connector-j-9.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-j-9.1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

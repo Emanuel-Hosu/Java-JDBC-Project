@@ -3,29 +3,28 @@ package Main;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Locale;
 
 public class Engine {
 	// Atributo de cada clase
-	private Scanner scn;
 	private D_InventoryManager invMan; // ¿ALOMEJOR HAY QUE PASARLE ALGO POR PARAMETRO?
 	private D_UpdateProduct updtPdct;
 	private Integer userOption;
-	private D_AddProduct addPdct;
+	private D_SupplierManagment suppMan;
+	/*private D_AddProduct addPdct;*/
 	
 	public Engine() {
-		scn = new Scanner(System.in);
-		scn.useLocale(Locale.US); // Asegura que los decimales se lean correctamente
 		invMan = new D_InventoryManager();
 		updtPdct = new D_UpdateProduct();
-		addPdct = new D_AddProduct();
+		//addPdct = new D_AddProduct();
+		suppMan = new D_SupplierManagment();
 		userOption = -1;
 	}
 
 	public void run() {
-
+		Scanner scn = new Scanner(System.in);
+		
 		while (this.userOption < 0 || this.userOption >= 7) {
 			showMenu();
 			// Try catch para asegurarnos que el usuario inserta un numero
@@ -47,11 +46,15 @@ public class Engine {
 					break;
 				case 2: // ADD
 					this.userOption = -1;
-					this.addLogic();
+					//this.addLogic();
 					break;
 				case 3:
 					this.userOption = -1;
 					updateLogic();
+					break;
+				case 5:
+					this.userOption = -1;
+					supplierManagmentLogic();
 					break;
 				default:
 					System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
@@ -60,15 +63,17 @@ public class Engine {
 	}
 
 	public void invenotryLogic() {
+		Scanner scn = new Scanner(System.in);
+		
 		while (this.userOption < 0 || this.userOption < 3) {
 			inventoryMenu();
 			// TRY CATCH PARA ASEGURARNOS QUE EL USUARIO METE UN NUMERO
 			try {
-				this.userOption = this.scn.nextInt();
-				this.scn.nextLine(); // ASUMIR EL SALTO DE LINEA
+				this.userOption = scn.nextInt();
+				scn.nextLine(); // ASUMIR EL SALTO DE LINEA
 			} catch (Exception e) {
 				System.out.println("ERROR, input has to be a number from 0 to 3, please TRY AGAIN");
-				this.scn.nextLine(); // CONSUMIR ENTRADA PARA EVITAR UN SALTO DE LINEA
+				scn.nextLine(); // CONSUMIR ENTRADA PARA EVITAR UN SALTO DE LINEA
 				pause();
 			}
 
@@ -87,8 +92,8 @@ public class Engine {
 				break;
 			case 0: // EXIT
 				this.userOption = -1; // RESET VARIABLE
-				run(); // ALOMEJOR CAMBIAR ESTO XD?
-				break;
+				System.out.println("Going to the menu...");
+				return; // ALOMEJOR CAMBIAR ESTO XD?
 			default:
 				System.out.println("ERROR, input has to be a number from 0 to 3, please TRY AGAIN");
 			}
@@ -98,11 +103,11 @@ public class Engine {
 
 	}
 	
-	public void addLogic() {
+	/*public void addLogic() {
 		boolean encontrado = true;
 		System.out.println("\n- - - - - - - - ADD - - - - - - - - ");
-		this.invMan.getAll();
-		this.pause();
+		this.invMan.getAll(); // PONER DISPONIBLE PRODUCTS
+		this.pause(); //PONER DISPONIBLE PROVEEDORES
 		this.addPdct.getProveedores();
 		this.pause();
 		while ( encontrado == true ) {
@@ -120,9 +125,11 @@ public class Engine {
 				System.out.println(category + " is not a category");
 			}
 		}
-	}
+	}*/
 	
 	public void updateLogic() {
+		Scanner scn = new Scanner(System.in);
+		
 		System.out.println("\n- - - - - - - - UPDATE - - - - - - - - ");
 		String nameInput = "";
 		
@@ -219,6 +226,118 @@ public class Engine {
 		pause();
 		run();
 	}
+	
+	public void supplierManagmentLogic() {
+		Scanner scn = new Scanner(System.in);
+		String supplierName = "";
+		String contactName= "";
+		String directionName = "";
+		int phoneName = 0;
+		String phoneToString = "";
+		
+		while (this.userOption < 0 || this.userOption < 3) {
+			supplierManagmentMenu();
+			
+			try {
+				this.userOption = scn.nextInt();
+				scn.nextLine();
+			}catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("ERROR, input HAS to be a number from 0 to 3, pleas TRY AGAIN.");
+				scn.nextLine();
+				pause();
+			}
+			
+			switch(this.userOption) {
+			case 1:
+				break;
+			case 2:
+
+				this.userOption = -1; // Reset variable
+				boolean existSupplier = true; // SE EJECUTA EN EL WHILE, RECOGE UN TRUE O UN FALSE, DEPENDIEDNO EN SI ENCUENTRA EL NOMBRE O NO
+				
+				while (existSupplier == true) { // SE BUSCA HASTA QUE SE ENCUENTE UN USUARIO NO EXISTENTE
+					System.out.println("Please insert SUPPLIER COMPANY NAME or TYPE exit to go back to the menu");
+					supplierName = scn.nextLine();
+					existSupplier = suppMan.getExistSupplierName(supplierName); // METODO QUE COMPUREBA SI EL NOMBRE EXISTE, ES UN BOOLEANO
+					
+					if (existSupplier == true) { // SI ES TRUE ESTO SIGNIFICA QUE EL NOMBRE EXISTE Y NO SE PUEDE ANIADIR
+						scn.nextLine(); // LIMPIAMOS EL BUFFER
+						System.out.println("NAME already Exist in BBDD, please try again");
+					}else if (existSupplier == false){ // SI EL NOMBRE NO EXISTE EN LA BBDD
+						System.out.println("SUCCESFUL NAME, not found in BBDD, proceding to insert SUPPLIER NAME...");
+					}else if(supplierName == "exit") {
+						System.out.println("Exiting to the menu...");
+						pause();
+						break;
+					}
+				}
+				
+				while (contactName == "") {
+					pause();
+					System.out.println("\nPlease insert CONTACT NAME of supplier: " + supplierName);
+					
+					contactName = scn.nextLine();
+					if (contactName.length() > 4) {
+						System.out.println("SUCCESFUL, proceding to insert CONTACT NAME, into " + supplierName + "...");
+					}else {
+						System.out.println("INVALID input, CONTACT NAME has to be lenght more than 4");
+						contactName = ""; // RESETEO VARIABLE PARA QUE VUELVA A ENTRAR EN EL BUCLE
+					}
+				}
+				
+				while (directionName == "") {
+					pause();
+					System.out.println("\nPlease insert ADRESS of supplier: " + supplierName);
+					
+					directionName = scn.next();
+					if (directionName.length() > 4) {
+						System.out.println("SUCCESFUL, proceding to insert ADRESS, into " + supplierName + "...");
+					}else {
+						System.out.println("INVALID input, CONTACT NAME has to be lenght more than 4");
+						directionName = ""; // RESETEO VARIABLE PARA QUE VUELVA A ENTRAR EN EL BUCLE
+					}
+				}
+				
+				while (phoneName == 0) {
+					pause();
+					System.out.println("\nPlease insert PHONE of supplier: " + supplierName);
+					
+					try {
+						scn.nextLine(); // LIMPIAMOS BUFFER
+						phoneName = scn.nextInt();
+					}catch (Exception e) {
+						// TODO: handle exception
+						System.out.println("ERROR, PHONE number has to be a number.");
+					}
+					
+					phoneToString = Integer.toString(phoneName);
+					
+					if (phoneToString.length() == 9) {
+						System.out.println("SUCCESFUL, proceding to insert PHONE, into " + supplierName + "...");
+					}else {
+						System.out.println("INVALID input, HAS TO HAVE has to be lenght more than 9 NUMBERS");
+						phoneName = 0; // RESETEO VARIABLE PARA QUE VUELVA A ENTRAR EN EL BUCLE
+					}
+				}
+				
+				suppMan.setAddSupplier(supplierName, contactName, directionName, phoneToString); // LE PASAMOS POR PARAMETRO EL NOMBRE, CONTACTO Y DIRECCION
+				pause();
+				break;
+			case 3:
+				break;
+			case 0:
+				this.userOption = -1;
+				System.out.println("Going to the menu...");
+				pause();
+				break;
+			default:
+				System.out.println("ERROR, input HAS to be a number from 0 to 3, please TRY AGAIN");
+			}
+			
+			this.userOption = -1; // RESET VARIABLE
+		}
+	}
 
 	// METODO QUE ENSENYA EL MENU
 	public void showMenu() {
@@ -232,11 +351,18 @@ public class Engine {
 	public void inventoryMenu() {
 		System.out.println("\n- - - - - - - INVENTORY - - - - - - - ");
 		System.out.println("Please select an option:\n");
-		System.out.println("1. Non-expired products\n2. Expired productst\n3. List all products\n0. Back to menu"); // PENSAR
+		System.out.println("1. Non-expired products\n2. Expired products\n3. List all products\n0. Back to menu");
+	}
+	
+	public void supplierManagmentMenu() {
+		System.out.println("\n- - - - SUPPLIER MANAGMENT - - - - ");
+		System.out.println("Please select an option:\n");
+		System.out.println("1. List all suppliers\n2. Add new supplier\n3. Delete supplier\n0. Back to menu");
 	}
 
 	// METODO QUE ESPERA UN ENTER PARA SEGUIR
 	public void pause() {
+		Scanner scn = new Scanner(System.in);
 		System.out.println("Please press enter to continue...");
 		scn.nextLine();
 	}

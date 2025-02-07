@@ -135,6 +135,7 @@ public class D_UpdateProduct {
 			ps.setDate(3, _fecha);
 			ps.setInt(4, _id_product);
 			
+			ps.executeUpdate();
 			System.out.println("Succesful, product UPDATED to BBDD");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
