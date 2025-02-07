@@ -50,7 +50,7 @@ public class D_SupplierManagment {
 		}
 		
 		// UNA VEZ SE HA EJECUTADO LA QUERY Y SE HA RECOGIDO O NO EL NOMBRE (EN CASO DE QUE NO EXISTA)
-		if (supplierName == _supplierName) {
+		if (supplierName.toLowerCase().equals(_supplierName)) {
 			encontrado = true;
 			return encontrado;
 		}else {
