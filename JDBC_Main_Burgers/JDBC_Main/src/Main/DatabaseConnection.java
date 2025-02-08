@@ -9,7 +9,7 @@ public class DatabaseConnection {
 	// Datos de conexion a la base de datos
 	private static final String URL = "jdbc:mysql://localhost:3306/mibasededatos";
 	private static final String USER = "root";
-	private static final String PASSWORD = "Cm071111";
+	private static final String PASSWORD = "root1234";
 	
 	public static Connection getConnection() {
 		Connection conn = null;
