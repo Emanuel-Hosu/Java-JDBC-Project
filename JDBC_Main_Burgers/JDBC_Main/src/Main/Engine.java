@@ -366,28 +366,125 @@ public class Engine {
 				
 				// COMPUREBO SI EL NOMBRE EXISTE EN LA BASE DE DATOS GG
 				while (existSupplier == true) { // SE BUSCA HASTA QUE SE ENCUENTE UN USUARIO EXISTENTE
-					System.out.println("Please insert SUPPLIER COMPANY NAME you want to DELETE or TYPE exit to go back to the menu");
+					System.out.println("\nPlease insert SUPPLIER COMPANY NAME you want to DELETE or TYPE exit to go back to the menu");
 					supplierName = scn.nextLine();
 					existSupplier = suppMan.getExistSupplierName(supplierName); // METODO QUE COMPUREBA SI EL NOMBRE EXISTE, ES UN BOOLEANO
 					
 					if (supplierName.toLowerCase().equals("exit")) { // SI EL USER PONE EXIT SE SALE
 						System.out.println("Exiting to the menu...");
 						pause();
-						return;
+						break;
 					}else if (existSupplier == false){ // SI EL NOMBRE NO EXISTE EN LA BBDD
 						System.out.println("ERROR, incorrect SUPPLIER NAME, not found in BBDD, please try again...");
 					}else if(existSupplier == true) { // SI ES TRUE ESTO SIGNIFICA QUE EL NOMBRE EXISTE Y NO SE PUEDE ANIADIR
 						System.out.println("SUCCESFUL SUPPLIER NAME found in BBDD, proceding to DELETE...");
+						break;
 					}
 				}
 				
 				// YA QUE TENGO EL NOMBRE NECESITO CONSEGUIR EL ID Y BORRAR LA TABLA, PREGUNTAR AL USUARIO SI ESTA SEGURO DE BORRAR
 				String comprobation = "";
-				System.out.println("You sure you want to delete SUPPLIER: " + supplierName + " y/n");
+				System.out.println("\nYou sure you want to delete SUPPLIER and ALL THE DEPENDENCIES: " + supplierName + " y/n");
 				while (comprobation == "") {
 					comprobation = scn.nextLine();
+					if (!comprobation.toLowerCase().equals("y")|| !comprobation.toLowerCase().equals("y")) {
+						System.out.println("Please INSERT y or n");
+					}else if(comprobation.toLowerCase().equals("y")) {
+						suppMan.setDeleteSupplier(supplierName);
+					}else {
+						System.out.println("Aborting operation...");
+					}
 				}
 				
+				break;
+			case 4:
+				System.out.println("- - - - ACTUAL SUPPLIERS - - - -");
+				this.addPdct.getProveedores();
+				
+				this.userOption = -1; // Reset variable
+				existSupplier = true; // SE EJECUTA EN EL WHILE, RECOGE UN TRUE O UN FALSE, DEPENDIEDNO EN SI ENCUENTRA EL NOMBRE O NO
+				
+				// COMPUREBO SI EL NOMBRE EXISTE EN LA BASE DE DATOS GG
+				while (existSupplier == true) { // SE BUSCA HASTA QUE SE ENCUENTE UN USUARIO EXISTENTE
+					System.out.println("\nPlease insert SUPPLIER COMPANY NAME you want to UPDATE or TYPE exit to go back to the menu");
+					supplierName = scn.nextLine();
+					existSupplier = suppMan.getExistSupplierName(supplierName); // METODO QUE COMPUREBA SI EL NOMBRE EXISTE, ES UN BOOLEANO
+					
+					if (supplierName.toLowerCase().equals("exit")) { // SI EL USER PONE EXIT SE SALE
+						System.out.println("Exiting to the menu...");
+						pause();
+						break;
+					}else if (existSupplier == false){ // SI EL NOMBRE NO EXISTE EN LA BBDD
+						System.out.println("ERROR, incorrect SUPPLIER NAME, not found in BBDD, please try again...");
+					}else if(existSupplier == true) { // SI ES TRUE ESTO SIGNIFICA QUE EL NOMBRE EXISTE Y NO SE PUEDE ANIADIR
+						System.out.println("SUCCESFUL SUPPLIER NAME found in BBDD, proceding to UPDATE...");
+						break;
+					}
+				}
+				
+				// LE PIDO EL NOMBRE DEL OWNER DE LA COMANIA
+				while (contactName == "") {
+					pause();
+					String acctualName = suppMan.getSupplierContactNameById(supplierName);
+					System.out.println("\nPlease UPDATE OWNER CONTACT NAME of supplier: " + supplierName);
+					System.out.println("Acctual value: " + acctualName);
+					
+					contactName = scn.nextLine();
+					if (contactName.length() > 4) {
+						System.out.println("SUCCESSFUL, proceding to UPDATE SUPPLIER NAME, into " + supplierName + "...");
+					}else {
+						System.out.println("INVALID input, OWNER CONTACT NAME has to be lenght more than 4");
+						contactName = ""; // RESETEO VARIABLE PARA QUE VUELVA A ENTRAR EN EL BUCLE
+					}
+				}
+				
+				// LE PIDO LA DIRECCION DE LA EMPRESA
+				while (directionName == "") {
+					pause();
+					String acctualDirrection = suppMan.getSupplierAdressById(supplierName);
+					System.out.println("\nPlease UPDATE DIRRECTION of supplier: " + supplierName);
+					System.out.println("Acctual value: " + acctualDirrection);
+					
+					System.out.println("\nPlease insert ADRESS of supplier: " + supplierName);
+					
+					directionName = scn.next();
+					if (directionName.length() > 4) {
+						System.out.println("SUCCESSFUL, proceding to insert ADRESS, into " + supplierName + "...");
+					}else {
+						System.out.println("INVALID input, CONTACT NAME has to be lenght more than 4");
+						directionName = ""; // RESETEO VARIABLE PARA QUE VUELVA A ENTRAR EN EL BUCLE
+					}
+				}
+				
+				// LE PIDO EL NUMERO DE TELEFONO DEL OWNER/SUPPLIER
+				while (phoneName == 0) {
+					String acctualPhone = suppMan.getSupplierPhoneById(supplierName);
+					System.out.println("\nPlease PHONE of supplier: " + supplierName);
+					System.out.println("Acctual value: " + acctualPhone);
+					
+					pause();
+					System.out.println("\nPlease insert PHONE of supplier: " + supplierName);
+					
+					try {
+						scn.nextLine(); // LIMPIAMOS BUFFER
+						phoneName = scn.nextInt();
+					}catch (Exception e) {
+						// TODO: handle exception
+						System.out.println("ERROR, PHONE number has to be a number.");
+					}
+					
+					phoneToString = Integer.toString(phoneName);
+					
+					if (phoneToString.length() == 9) {
+						System.out.println("SUCCESSFUL, proceding to insert PHONE, into " + supplierName + "...");
+					}else {
+						System.out.println("INVALID input, HAS TO HAVE has to be lenght more than 9 NUMBERS");
+						phoneName = 0; // RESETEO VARIABLE PARA QUE VUELVA A ENTRAR EN EL BUCLE
+					}
+				}
+				
+				suppMan.setUpdateSuppliers(supplierName, contactName, directionName, phoneToString);
+				pause();
 				break;
 			case 0:
 				this.userOption = -1;
@@ -420,7 +517,7 @@ public class Engine {
 	public void supplierManagmentMenu() {
 		System.out.println("\n- - - - SUPPLIER MANAGMENT - - - - ");
 		System.out.println("Please select an option:\n");
-		System.out.println("1. List all suppliers\n2. Add new supplier\n3. Delete supplier\n0. Back to menu");
+		System.out.println("1. List all suppliers\n2. Add new supplier\n3. Delete supplier\n4. Update supplier\n0. Back to menu");
 	}
 
 	// METODO QUE ESPERA UN ENTER PARA SEGUIR

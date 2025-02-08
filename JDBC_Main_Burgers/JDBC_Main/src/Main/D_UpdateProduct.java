@@ -135,8 +135,8 @@ public class D_UpdateProduct {
 			ps.setDate(3, _fecha);
 			ps.setInt(4, _id_product);
 			
-			ps.executeUpdate();
 			System.out.println("Succesful, product UPDATED to BBDD");
+			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("An ERROR has ocurred while trying to bring the fata from the BBDD in getUpdateProduct");
