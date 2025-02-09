@@ -41,7 +41,7 @@ public class D_Order {
 				// ACTUALIZAMOS EL ALIMENTO SEGUN EL PEDIDO QUE HEMOS HECHO
 				String update = "UPDATE alimentos SET stock = stock + ?, fecha_caducidad = ? WHERE id_alimento = ?";
 				try (PreparedStatement ps2 = conn.prepareStatement(update)) {
-					LocalDate fechaActual = LocalDate.now();
+					LocalDate fechaActual = LocalDate.now().plusMonths(3);
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 					ps2.setFloat(1, cantidad);
 					ps2.setDate(2, Date.valueOf(fechaActual.format(formatter)));
@@ -66,7 +66,7 @@ public class D_Order {
 
 	public int getIdPedido(int id_proveedor, float cantidad, float precio) {
 		String insert = "INSERT INTO pedidos (id_proveedor, fecha_pedido, cantidad_total, monto_total) VALUES (?,?,?,?)";
-		LocalDate fechaActual = LocalDate.now().plusMonths(3);
+		LocalDate fechaActual = LocalDate.now();
 		// Definir el formato de la fecha como 'año-mes-día'
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		int id_pedido = 0;
@@ -76,7 +76,6 @@ public class D_Order {
 			insertStmt.setDate(2, Date.valueOf(fechaActual.format(formatter)));
 			insertStmt.setFloat(3, cantidad);
 			insertStmt.setFloat(4, (precio * cantidad));
-			insertStmt.executeUpdate();
 			insertStmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -82,8 +82,11 @@ public class Engine {
 				case 8:
 					this.userOption = -1;
 					createLogic();
+				case 0:
+					System.out.println("Goodbye!!!!");
+					break;
 				default:
-					System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
+					System.out.println("ERROR, input has to be a number from 0 to 8, please TRY AGAIN");
 				}
 		}
 	}
