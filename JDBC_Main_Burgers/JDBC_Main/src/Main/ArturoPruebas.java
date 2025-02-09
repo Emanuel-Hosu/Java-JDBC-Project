@@ -16,6 +16,7 @@ public class ArturoPruebas {
 	private D_AddProduct addPdct;
 	private D_Order order;
 	private D_Stadistic stats;
+	private D_Create create;
 	
 	public ArturoPruebas() {
 		scn = new Scanner(System.in);
@@ -26,11 +27,12 @@ public class ArturoPruebas {
 		userOption = -1;
 		order = new D_Order();
 		stats = new D_Stadistic();
+		create = new D_Create();
 	}
 
 	public void run() {
 
-		while (this.userOption < 0 || this.userOption >= 7) {
+		while (this.userOption < 0 || this.userOption >= 8) {
 			showMenu();
 			// Try catch para asegurarnos que el usuario inserta un numero
 			try {
@@ -64,10 +66,20 @@ public class ArturoPruebas {
 				case 6: 
 					this.userOption = -1;
 					stadisticsLogic();
+				case 8:
+					this.userOption = -1;
+					createLogic();
 				default:
 					System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
 				}
 		}
+	}
+	
+	public void createLogic() {
+		System.out.println("\n- - - - - - - - CREATE/DELETE - - - - - - - - ");
+		System.out.println("Do you want to create or to delete the tables:\n1. Create\n2. Delete\n ");
+		int opcion = scn.nextInt();
+		create.system32(opcion);
 	}
 	
 	public void orderLogic() {
@@ -293,7 +305,7 @@ public class ArturoPruebas {
 		System.out.println("Please select an option:\n");
 		// SI vamos bien de tiempo alomejor añadir empleados?
 		System.out.println(
-				"1. View inventory\n2. Add Product\n3. Update product\n4. Place order from supplier\n5. Supplier managment\n6. Statistics\n7. Sell\n0. Exit");
+				"1. View inventory\n2. Add Product\n3. Update product\n4. Place order from supplier\n5. Supplier managment\n6. Statistics\n7. Sell\n8. Delete/Create\n0. Exit");
 	}
 
 	public void inventoryMenu() {
