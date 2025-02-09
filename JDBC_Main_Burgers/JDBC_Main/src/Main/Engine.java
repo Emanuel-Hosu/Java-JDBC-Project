@@ -19,6 +19,8 @@ public class Engine {
 	private D_AddProduct addPdct;
 	private D_Order order;
 	private D_Sell sell;
+	private D_Create create;
+	private D_Stadistic stats;
 	
 	public Engine() {
 		userOption = -1;
@@ -28,6 +30,8 @@ public class Engine {
 		suppMan = new D_SupplierManagment();
 		order = new D_Order();
 		sell = new D_Sell();
+		stats = new D_Stadistic();
+		create = new D_Create();
 	}
 
 	public void run() {
@@ -68,14 +72,28 @@ public class Engine {
 					this.userOption = -1;
 					supplierManagmentLogic();
 					break;
+				case 6: 
+					this.userOption = -1;
+					stadisticsLogic();
 				case 7:
 					this.userOption = -1;
 					sellLogic();
 					break;
+				case 8:
+					this.userOption = -1;
+					createLogic();
 				default:
 					System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
 				}
 		}
+	}
+	
+	public void createLogic() {
+		Scanner scn = new Scanner(System.in);
+		System.out.println("\n- - - - - - - - CREATE/DELETE - - - - - - - - ");
+		System.out.println("Do you want to create or to delete the tables:\n1. Create\n2. Delete\n ");
+		int opcion = scn.nextInt();
+		create.system32(opcion);
 	}
 	
 	public void orderLogic() {
@@ -92,6 +110,49 @@ public class Engine {
 			realizado = order.setOrder(name, cantidad);
 		}
 		pause();
+	}
+	
+	
+	public void stadisticsLogic() {
+		Scanner scn = new Scanner(System.in);
+		while(this.userOption < 0 || this.userOption < 6) {
+			stadisticsMenu();
+			try {
+				this.userOption = scn.nextInt();
+				scn.nextLine(); // ASUMIR EL SALTO DE LINEA
+			} catch (Exception e) {
+				System.out.println("ERROR, input has to be a number from 0 to 5, please TRY AGAIN");
+				scn.nextLine(); // CONSUMIR ENTRADA PARA EVITAR UN SALTO DE LINEA
+				pause();
+			}
+			
+			switch (this.userOption) {
+			case 1: 
+				stats.expensive();
+				pause();
+				break;
+			case 2:
+				stats.cheaper();
+				pause();
+				break;
+			case 3:
+				stats.bestSellings();
+				pause();
+				break;
+			case 4:
+				stats.totalPrice();
+				pause();
+				break;
+			case 5:
+				stats.sellDetails();
+				pause();
+				break;
+			case 0: // EXIT
+				this.userOption = -1; // RESET VARIABLE
+				run(); // ALOMEJOR CAMBIAR ESTO XD?
+				break;
+			}
+		}
 	}
 
 	public void invenotryLogic() {
@@ -638,6 +699,12 @@ public class Engine {
 		System.out.println("\n- - - - SUPPLIER MANAGMENT - - - - ");
 		System.out.println("Please select an option:\n");
 		System.out.println("1. List all suppliers\n2. Add new supplier\n3. Delete supplier\n4. Update supplier\n0. Back to menu");
+	}
+	
+	public void stadisticsMenu() {
+		System.out.println("\n- - - - - - - STADISTICS - - - - - - - ");
+		System.out.println("Please select an option:\n");
+		System.out.println("1. More expensive \n2. Cheaper\n3. Best selling\n4. Total inventory\n5. Sale details\n0. Back to menu");
 	}
 
 	// METODO QUE ESPERA UN ENTER PARA SEGUIR

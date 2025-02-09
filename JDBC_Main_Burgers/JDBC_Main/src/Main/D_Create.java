@@ -81,7 +81,7 @@ public class D_Create {
 				case "Proveedores":
 					query = "CREATE TABLE Proveedores (" + "id_proveedor INT AUTO_INCREMENT PRIMARY KEY, "
 							+ "nombre VARCHAR(100) NOT NULL, " + "contacto VARCHAR(100) NOT NULL, "
-							+ "direccion VARCHAR(200) NOT NULL" + ");";
+							+ "direccion VARCHAR(200) NOT NULL" + "telefono VARCHAR(9) NOT NULL" + ");";
 					break;
 				case "Alimentos_Proveedores":
 					query = "CREATE TABLE Alimentos_Proveedores (" + "id_alimento INT, " + "id_proveedor INT, "
