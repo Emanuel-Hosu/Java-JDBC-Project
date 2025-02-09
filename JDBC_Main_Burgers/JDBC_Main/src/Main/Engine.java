@@ -686,7 +686,7 @@ public class Engine {
 		System.out.println("Please select an option:\n");
 		// SI vamos bien de tiempo alomejor añadir empleados?
 		System.out.println(
-				"1. View inventory\n2. Add Product\n3. Update product\n4. Place order from supplier\n5. Supplier managment\n6. Statistics\n7. Sell\n0. Exit");
+				"1. View inventory\n2. Add Product\n3. Update product\n4. Place order from supplier\n5. Supplier managment\n6. Statistics\n7. Sell\n8. Create/Delete\n0. Exit");
 	}
 
 	public void inventoryMenu() {
