@@ -37,14 +37,14 @@ public class Engine {
 	public void run() {
 		Scanner scn = new Scanner(System.in);
 		
-		while (this.userOption < 0 || this.userOption > 7) {
+		while (this.userOption < 0 || this.userOption > 8) {
 			showMenu();
 			// Try catch para asegurarnos que el usuario inserta un numero
 			 try {
 			        this.userOption = scn.nextInt();
 			        scn.nextLine(); // Consumir el salto de línea pendiente
 			    } catch (Exception e) {
-			        System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
+			        System.out.println("ERROR, input has to be a number from 0 to 8, please TRY AGAIN");
 			        scn.nextLine(); // Consumir entrada incorrecta para evitar bucle infinito
 			        this.userOption = -1; // Asegura que el bucle se repita
 			        pause();
