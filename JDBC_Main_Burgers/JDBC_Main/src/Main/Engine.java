@@ -1,10 +1,14 @@
 package Main;
 
+import java.security.Principal;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class Engine {
 	// Atributo de cada clase
@@ -14,31 +18,33 @@ public class Engine {
 	private D_SupplierManagment suppMan;
 	private D_AddProduct addPdct;
 	private D_Order order;
+	private D_Sell sell;
 	
 	public Engine() {
+		userOption = -1;
 		invMan = new D_InventoryManager();
 		updtPdct = new D_UpdateProduct();
 		addPdct = new D_AddProduct();
 		suppMan = new D_SupplierManagment();
-		userOption = -1;
 		order = new D_Order();
+		sell = new D_Sell();
 	}
 
 	public void run() {
 		Scanner scn = new Scanner(System.in);
 		
-		while (this.userOption < 0 || this.userOption >= 7) {
+		while (this.userOption < 0 || this.userOption > 7) {
 			showMenu();
 			// Try catch para asegurarnos que el usuario inserta un numero
-			try {
-				this.userOption = scn.nextInt();
-				scn.nextLine(); // Consumir el salto de línea pendiente
-			} catch (Exception e) {
-				// TODO: handle exception
-				System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
-				scn.nextLine(); // Consumir entrada incorrecta para evitar bucle infinito
-				pause();
-			}
+			 try {
+			        this.userOption = scn.nextInt();
+			        scn.nextLine(); // Consumir el salto de línea pendiente
+			    } catch (Exception e) {
+			        System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
+			        scn.nextLine(); // Consumir entrada incorrecta para evitar bucle infinito
+			        this.userOption = -1; // Asegura que el bucle se repita
+			        pause();
+			    }
 
 			// SALE DEL BUCLE SI EL NUMERO ESTA EN ENTERE EL 0 Y LAS OPCIONES DE INVENTARIO
 				switch (this.userOption) {
@@ -61,6 +67,10 @@ public class Engine {
 				case 5:
 					this.userOption = -1;
 					supplierManagmentLogic();
+					break;
+				case 7:
+					this.userOption = -1;
+					sellLogic();
 					break;
 				default:
 					System.out.println("ERROR, input has to be a number from 0 to 7, please TRY AGAIN");
@@ -496,6 +506,116 @@ public class Engine {
 			}
 			
 			this.userOption = -1; // RESET VARIABLE
+		}
+	}
+	
+	public void sellLogic() {
+		Scanner scn = new Scanner(System.in);
+		scn.useLocale(Locale.US); // Asegura que use el punto como separador decimal
+		HashMap<String, Float> engineCart  = new HashMap<String, Float>();
+
+		String category = "";
+		while (userOption < 0 || userOption > 3) {
+			System.out.println("- - - - - - - - SELL - - - - - - - -");
+			System.out.println("Disponible products: ");
+			System.out.println("Please select a category which one you want to buy (0...4):\n1. Fruit\n2. Vegetable\n3. Dried fruit\n4. Cart\n0. Exit");
+			
+			try {
+				userOption = scn.nextInt();
+			} catch (Exception e) {
+				System.out.println("ERROR input category. Has to be a number has to be from 0 to 4, please try again.");
+			}
+			
+			switch (userOption){
+			case 1:
+				category = "fruta";
+				break;
+			case 2:
+				category = "verdura";
+				break;
+			case 3:
+				category = "fruto_seco";
+				break;
+			case 4:
+				// MOSTRAR EL CARRITO ANTES DE COMPRAR
+				this.userOption = -1; // RESETEAMOS LA VARIABLE
+				System.out.println("- - - CART - - -");
+				for (Entry<String, Float> entry : engineCart.entrySet()) {
+		            System.out.println(entry.getKey().toUpperCase() + " x " + entry.getValue() + " € KG");
+		        }
+				System.out.println("WEIGHING the products...");
+				pause();
+				sell.purchaseBuy();
+				System.out.println("Going back to the menu...");
+				pause();
+				return;
+			case 0:
+				this.userOption = -1; // RESETEAMOS LA VARIABLE
+				System.out.println("Going back to the menu...");
+				pause();
+				return;
+		}
+		
+		System.out.println("- - - DISPONIBLE PRODUCTS - - -"); // PRINTEAMOS LOS PRODUCTOS DISPONIBLES DE LOS QUE EL USUARIO DESEEA COMPRAR
+		this.sell.getCategory(category);
+		
+		boolean existProduct = false; // SE INICIALIZA EN FALSE PARA QUE ENTRE EN EL WHILE, DENTRO DE ESTE SI EL PRODUCTO NO EXITSTE SE PONE TRUE
+		String productName = "";
+		
+		// COMPUREBO SI EL NOMBRE del PRODUCTO EXISTE EN LA BASE DE DATOS GG
+		while (existProduct == false) { // SE BUSCA HASTA QUE ENCUENTRE UN NOMBRE EXISTENTE
+			System.out.println("\nPlease insert the PRODUCT NAME which you want to buy or type EXIT to go back to the menu.");
+			productName = scn.next();
+			existProduct = sell.getExistProductName(productName.toLowerCase()); // METODO QUE COMPUREBA SI EL NOMBRE EXISTE, ES UN BOOLEANO
+			
+			if (productName.toLowerCase().equals("exit")) { // SI EL USER PONE EXIT SE SALE
+				System.out.println("Exiting to the menu...");
+				pause();
+				return;
+			}else if (productName.toLowerCase().equals("cart")){ // SI DESEA IR AL CARRITO
+				System.out.println("Redirecting to the CART...");
+				pause();
+			}else if (existProduct == false){ // SI EL NOMBRE NO EXISTE EN LA BBDD
+				System.out.println("ERROR PRODUCT NAME, not found in BBDD, please try again.");
+			}else if(existProduct == true) { // SI ES TRUE ESTO SIGNIFICA QUE EL NOMBRE EXISTE Y NO SE PUEDE ANIADIR
+				System.out.println("SUCCESFUL product FOUND.");
+			}
+		}
+		// MAYBE TODO EN UN IF QUE NO SEA IGUAL A UN !CART
+		int id_producto = sell.getIdProductByName(productName);
+		float price = sell.getPriceById(id_producto);
+		float stock = sell.getStockById(id_producto);
+		float userBuyed = 0; // LO QUE COMPRA EL USUARIO, SIEMPRE TENDRA MAS VALOR QUE CERO SI ESTE TIENE UN VALOR MENOS QUE EL STOCK
+		
+			while (userBuyed == 0) {
+				System.out.println(""); // Salto de linea
+				System.out.println("Product SELECTED "+ productName);
+				System.out.println("Price: " + price + " € x KG");
+				System.out.println("Acctual stock: " + stock + " KG");
+				
+				System.out.println("Please introduce the quantity you want to buy");
+				try {
+					userBuyed = scn.nextFloat();
+				} catch (Exception e) {
+					System.out.println("ERROR input has to be a number, please introduce a number form 0.01 to" + stock);
+				}
+				
+				// SI ESTE ES MENOR O IGUAL AL NUMERO DE STOCK SERA CORRECTO
+				if (userBuyed < stock) { 
+					userOption = -1; // REST VARIABLE
+					// LOS AÑADIMOS AL AL HASH MAP DE D_SELL;
+					// METODO QUE SE ENCARGA DE ELIMINAR EL STOCJ DE LOS ALIMENTOS UNA VEZ COMPRADOS
+					sell.setCart(id_producto, userBuyed, (price * userBuyed)); // LE PASO EL ID DEL PRODUCTO EL STOCK QUE HA COMPRADO Y EL SUBTOTAL PARA FACILITARME EL CALCULO EN SELL JEJE GOD
+					engineCart.put(productName, (price * userBuyed)); // EL CARRITO
+					System.out.println("SUCCESFUL added to CART " + userBuyed + " KG of " + productName + "s whit PRICE: " + (price * userBuyed) + " €");
+					break;
+				}else { // SI ES MAYOR AL STOCK SE LE AVISA Y SE RESETA LA VARIABLE PARA QUE VUELVA A ENTRAR EN EL BUCLE WHILE
+					userOption = -1; // REST VARIABLE
+					userBuyed = 0;
+					System.out.println("ERROR choosed stock has to be LOWER than " + stock);
+					break;
+				}
+			}
 		}
 	}
 
