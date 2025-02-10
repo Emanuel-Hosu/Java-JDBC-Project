@@ -10,6 +10,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * Clase principal que actúa como controlador del sistema.
+ */
 public class Engine {
 	// Atributo de cada clase
 	private D_InventoryManager invMan; // ¿ALOMEJOR HAY QUE PASARLE ALGO POR PARAMETRO?
@@ -22,6 +25,10 @@ public class Engine {
 	private D_Create create;
 	private D_Stadistic stats;
 	
+	/**
+	 * Constructor de la clase Engine.
+	 * Inicializa todos los módulos del sistema.
+	 */
 	public Engine() {
 		userOption = -1;
 		invMan = new D_InventoryManager();
@@ -34,6 +41,10 @@ public class Engine {
 		create = new D_Create();
 	}
 
+	/**
+	 * Método principal que ejecuta el sistema.
+	 * Muestra el menú principal y gestiona la interacción del usuario.
+	 */
 	public void run() {
 		Scanner scn = new Scanner(System.in);
 		
@@ -91,6 +102,9 @@ public class Engine {
 		}
 	}
 	
+	/**
+	 * Lógica para crear o eliminar tablas en la base de datos.
+	 */
 	public void createLogic() {
 		Scanner scn = new Scanner(System.in);
 		System.out.println("\n- - - - - - - - CREATE/DELETE - - - - - - - - ");
@@ -99,6 +113,9 @@ public class Engine {
 		create.system32(opcion);
 	}
 	
+	/**
+	 * Lógica para gestionar pedidos.
+	 */
 	public void orderLogic() {
 		Scanner scn = new Scanner(System.in);
 		System.out.println("\n- - - - - - - - ORDER - - - - - - - - ");
@@ -115,7 +132,9 @@ public class Engine {
 		pause();
 	}
 	
-	
+	/**
+	 * Lógica para gestionar estadísticas.
+	 */
 	public void stadisticsLogic() {
 		Scanner scn = new Scanner(System.in);
 		while(this.userOption < 0 || this.userOption < 6) {
@@ -158,6 +177,9 @@ public class Engine {
 		}
 	}
 
+	/**
+	 * Lógica para gestionar el inventario.
+	 */
 	public void invenotryLogic() {
 		Scanner scn = new Scanner(System.in);
 		
@@ -199,6 +221,9 @@ public class Engine {
 
 	}
 	
+	/**
+	 * Lógica para añadir productos.
+	 */
 	public void addLogic() {
 		Scanner scn = new Scanner(System.in);
 		boolean encontrado = true;
@@ -225,6 +250,9 @@ public class Engine {
 		pause();
 	}
 	
+	/**
+	 * Lógica para actualizar productos.
+	 */
 	public void updateLogic() {
 		Scanner scn = new Scanner(System.in);
 		
@@ -325,6 +353,9 @@ public class Engine {
 		run();
 	}
 	
+	/**
+	 * Lógica para gestionar proveedores.
+	 */
 	public void supplierManagmentLogic() {
 		Scanner scn = new Scanner(System.in);
 		String supplierName = "";
@@ -573,6 +604,9 @@ public class Engine {
 		}
 	}
 	
+	/**
+	 * Logica para gestionar la venta de productos.
+	 */
 	public void sellLogic() {
 		Scanner scn = new Scanner(System.in);
 		scn.useLocale(Locale.US); // Asegura que use el punto como separador decimal
@@ -684,6 +718,9 @@ public class Engine {
 	}
 
 	// METODO QUE ENSENYA EL MENU
+	/**
+	 * Muestra el menú principal del sistema.
+	 */
 	public void showMenu() {
 		System.out.println("- - - - - - - - WELCOME - - - - - - - - ");
 		System.out.println("Please select an option:\n");
@@ -692,18 +729,27 @@ public class Engine {
 				"1. View inventory\n2. Add Product\n3. Update product\n4. Place order from supplier\n5. Supplier managment\n6. Statistics\n7. Sell\n8. Create/Delete\n0. Exit");
 	}
 
+	/*+
+	 * Muestra el menú de inventario.
+	 */
 	public void inventoryMenu() {
 		System.out.println("\n- - - - - - - INVENTORY - - - - - - - ");
 		System.out.println("Please select an option:\n");
 		System.out.println("1. Non-expired products\n2. Expired products\n3. List all products\n0. Back to menu");
 	}
 	
+	/**
+	 * Muestra el menú de gestión de proveedores.	
+	 */
 	public void supplierManagmentMenu() {
 		System.out.println("\n- - - - SUPPLIER MANAGMENT - - - - ");
 		System.out.println("Please select an option:\n");
 		System.out.println("1. List all suppliers\n2. Add new supplier\n3. Delete supplier\n4. Update supplier\n0. Back to menu");
 	}
 	
+	/**
+	 * Muestra el menú de estadísticas.
+	 */
 	public void stadisticsMenu() {
 		System.out.println("\n- - - - - - - STADISTICS - - - - - - - ");
 		System.out.println("Please select an option:\n");
@@ -711,6 +757,9 @@ public class Engine {
 	}
 
 	// METODO QUE ESPERA UN ENTER PARA SEGUIR
+	/**
+	 * Pausa la ejecución del programa hasta que el usuario presiona Enter.
+	 */
 	public void pause() {
 		Scanner scn = new Scanner(System.in);
 		System.out.println("Please press enter to continue...");

@@ -8,13 +8,27 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Clase que gestiona los pedidos en el sistema.
+ */
 public class D_Order {
 	private Connection conn;
 
+	/**
+	 * Constructor de la clase D_Order.
+	 * Inicializa la conexión a la base de datos.
+	 */
 	public D_Order() {
 		conn = DatabaseConnection.getConnection();
 	}
 
+	/**
+	 * Establece un nuevo pedido en la base de datos.
+	 * 
+	 * @param nombre Nombre del producto a pedir.
+	 * @param cantidad Cantidad del producto a pedir.
+	 * @return true si el pedido se realizó con éxito, false en caso contrario.
+	 */
 	public boolean setOrder(String nombre, float cantidad) {
 		
 		boolean realizado = false;
@@ -64,6 +78,14 @@ public class D_Order {
 		return realizado;
 	}
 
+	/**
+	 * Obtiene el ID del pedido basado en el ID del proveedor, la cantidad y el precio.
+	 * 
+	 * @param id_proveedor ID del proveedor.
+	 * @param cantidad Cantidad del producto.
+	 * @param precio Precio del producto.
+	 * @return ID del pedido.
+	 */
 	public int getIdPedido(int id_proveedor, float cantidad, float precio) {
 		String insert = "INSERT INTO pedidos (id_proveedor, fecha_pedido, cantidad_total, monto_total) VALUES (?,?,?,?)";
 		LocalDate fechaActual = LocalDate.now();
@@ -85,6 +107,11 @@ public class D_Order {
 		return id_pedido;
 	}
 
+	/**
+	 * Obtiene el último ID de pedido generado.
+	 * 
+	 * @return Último ID de pedido generado.
+	 */
 	public int getLastIdGenerated() {
 		String query = "SELECT id_pedido FROM pedidos ORDER BY id_pedido DESC LIMIT 1";
 		int id_pedido = -1;
@@ -100,6 +127,14 @@ public class D_Order {
 		return id_pedido;
 	}
 	
+	/**
+	 * Establece los detalles del pedido en la base de datos.
+	 * 
+	 * @param id_alimento ID del alimento.
+	 * @param id_pedido ID del pedido.
+	 * @param cantidad Cantidad del producto.
+	 * @param precio Precio del producto.
+	 */
 	public void setDetallesPedido(int id_alimento, int id_pedido, float cantidad, float precio) {
 		String insert = "INSERT INTO detalles_pedido (id_pedido, id_alimento, cantidad, precio) VALUES (?,?,?,?)";
 
@@ -114,6 +149,12 @@ public class D_Order {
 		}
 	}
 
+	/**
+	 * Obtiene el ID del proveedor basado en el ID del alimento.
+	 * 
+	 * @param id_alimento ID del alimento.
+	 * @return ID del proveedor.
+	 */
 	public int getIdProveedor(int id_alimento) {
 	    //AP RELACIONA ALIMENTO PROVEEDORES COGEMOS EL ID QUE COINCIDADA EL EL ID DE ALIMENTO EN AMBAS TABLAS
 	    String query = "SELECT ap.id_proveedor FROM alimentos_proveedores ap " +

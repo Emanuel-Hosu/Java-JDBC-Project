@@ -8,13 +8,28 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Clase que gestiona la adición de productos en la base de datos.
+ */
 public class D_AddProduct {
 	private Connection conn;
 
+	/**
+	 * Constructor de la clase D_AddProduct.
+	 * Inicializa la conexión a la base de datos.
+	 */
 	public D_AddProduct() {
 		conn = DatabaseConnection.getConnection();
 	}
 
+	/**
+	 * Añade un nuevo producto a la base de datos.
+	 * 
+	 * @param nombre Nombre del producto.
+	 * @param categoria Categoría del producto.
+	 * @param _id ID del proveedor.
+	 * @return true si el producto ya existe, false si se añadió correctamente.
+	 */
 	public boolean Add(String nombre, String categoria, int _id) {
 		//esta i la devolveremos con -1 si el producto ya esta en la base de datos o 1 si se ha podido añadir
 		boolean encontrado = false;
@@ -54,6 +69,12 @@ public class D_AddProduct {
 		return encontrado;
 	}
 
+	/**
+	 * Añade la relación entre el producto y el proveedor en la base de datos.
+	 * 
+	 * @param nombre Nombre del producto.
+	 * @param _id ID del proveedor.
+	 */
 	public void alimentos_Proveedores(String nombre, int _id) {
 		// buscamos el id del alimento que hemos añadido
 		String query = "SELECT id_alimento FROM alimentos WHERE nombre = ?";
@@ -80,6 +101,9 @@ public class D_AddProduct {
 		}
 	}
 
+	/**
+	 * Obtiene y muestra todos los proveedores de la base de datos.
+	 */
 	public void getProveedores() {
 		String query = "SELECT * FROM Proveedores";
 

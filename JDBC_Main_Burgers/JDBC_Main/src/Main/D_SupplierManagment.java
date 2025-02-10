@@ -5,14 +5,28 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Clase que gestiona la administración de proveedores en la base de datos.
+ */
 public class D_SupplierManagment {
 	private Connection conn;
 	
+	/**
+	 * Constructor de la clase D_SupplierManagment.
+	 * Inicializa la conexión a la base de datos.
+	 */
 	public D_SupplierManagment() {
 		conn = DatabaseConnection.getConnection();
 	}
 	
-	// PASARLE EL NOMBRE PROVEEDOR POR PARAMETRO
+	/**
+	 * Añade un nuevo proveedor a la base de datos.
+	 * 
+	 * @param _supplierName Nombre del proveedor.
+	 * @param _contactName Nombre del contacto del proveedor.
+	 * @param _adress Dirección del proveedor.
+	 * @param _phone Teléfono del proveedor.
+	 */
 	public void setAddSupplier(String _supplierName, String _contactName, String _adress, String _phone) {
 		String query = "INSERT INTO Proveedores SET nombre = ?, contacto = ?, direccion = ?, telefono = ?";
 		
@@ -31,6 +45,12 @@ public class D_SupplierManagment {
 		}
 	}
 	
+	/**
+	 * Verifica si un proveedor existe en la base de datos.
+	 * 
+	 * @param _supplierName Nombre del proveedor a buscar.
+	 * @return true si el proveedor existe, false en caso contrario.
+	 */
 	public boolean getExistSupplierName(String _supplierName) {
 		boolean encontrado = false;
 		String supplierName = "";
@@ -58,6 +78,11 @@ public class D_SupplierManagment {
 		}
 	}
 	
+	/**
+	 * Elimina un proveedor de la base de datos.
+	 * 
+	 * @param _supplierName Nombre del proveedor a eliminar.
+	 */
 	public void setDeleteSupplier(String _supplierName) {
 		int idSupplier = getSupplierIdByString(_supplierName);
 		String query = "DELETE FROM Proveedores WHERE id_proveedor = ?";
@@ -71,6 +96,12 @@ public class D_SupplierManagment {
 		}
 	}
 	
+	/**
+	 * Obtiene el nombre del contacto de un proveedor basado en su nombre.
+	 * 
+	 * @param _supplierName Nombre del proveedor.
+	 * @return Nombre del contacto del proveedor.
+	 */
 	public String getSupplierContactNameById(String _supplierName) {
 		int idSupplier = getSupplierIdByString(_supplierName);
 		String query = "SELECT contacto FROM Proveedores WHERE id_proveedor = ?";
@@ -91,7 +122,12 @@ public class D_SupplierManagment {
 		return returnedContact;
 	}
 	
-	
+	/**
+	 * Obtiene la dirección de un proveedor basado en su nombre.
+	 * 
+	 * @param _supplierName Nombre del proveedor.
+	 * @return Dirección del proveedor.
+	 */
 	public String getSupplierAdressById(String _supplierName) {
 		int idSupplier = getSupplierIdByString(_supplierName);
 		String query = "SELECT direccion FROM Proveedores WHERE id_proveedor = ?";
@@ -112,6 +148,12 @@ public class D_SupplierManagment {
 		return returnedAdress;
 	}
 	
+	/**
+	 * Obtiene el teléfono de un proveedor basado en su nombre.
+	 * 
+	 * @param _supplierName Nombre del proveedor.
+	 * @return Teléfono del proveedor.
+	 */
 	public String getSupplierPhoneById(String _supplierName) {
 		int idSupplier = getSupplierIdByString(_supplierName);
 		String query = "SELECT telefono FROM Proveedores WHERE id_proveedor = ?";
@@ -132,6 +174,12 @@ public class D_SupplierManagment {
 		return returnedPhone;
 	}
 	
+	/**
+	 * Obtiene el ID de un proveedor basado en su nombre.
+	 * 
+	 * @param _supplierName Nombre del proveedor.
+	 * @return ID del proveedor.
+	 */
 	public int getSupplierIdByString(String _supplierName) {
 		String query = "SELECT id_proveedor FROM Proveedores WHERE nombre = ?";
 		int id_proveedor = -1;
@@ -155,6 +203,14 @@ public class D_SupplierManagment {
 		return id_proveedor;
 	}
 	
+	/**
+	 * Actualiza los detalles de un proveedor en la base de datos.
+	 * 
+	 * @param _supplierName Nombre del proveedor.
+	 * @param _contact Nombre del contacto del proveedor.
+	 * @param _adress Dirección del proveedor.
+	 * @param _telefono Teléfono del proveedor.
+	 */
 	public void setUpdateSuppliers(String _supplierName, String _contact, String _adress, String _telefono) {
 		String query = "UPDATE Proveedores SET contacto = ?, direccion = ?, telefono = ? WHERE id_proveedor = ?;";
 		int id_proveedor = getSupplierIdByString(_supplierName);

@@ -4,13 +4,23 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Clase que gestiona la conexión a la base de datos.
+ * Implementa el patrón Singleton para asegurar una única instancia de conexión.
+ */
 public class DatabaseConnection {
 	
 	// Datos de conexion a la base de datos
 	private static final String URL = "jdbc:mysql://localhost:3306/mibasededatos";
 	private static final String USER = "root";
-	private static final String PASSWORD = "root1234";
+	private static final String PASSWORD = "Cm071111";
 	
+	/**
+	 * Obtiene una conexión a la base de datos.
+	 * 
+	 * @return Connection objeto de conexión a la base de datos.
+	 * @throws SQLException si ocurre un error al intentar conectar a la base de datos.
+	 */
 	public static Connection getConnection() {
 		Connection conn = null;
 		
@@ -25,7 +35,10 @@ public class DatabaseConnection {
 		return conn;
 	}
 	
-	// TEST DE CONEXION
+	/**
+	 * Prueba la conexión a la base de datos.
+	 * Imprime un mensaje indicando si la conexión fue exitosa o fallida.
+	 */
 	public static void testConnection() {
 	    try (Connection conn = getConnection()) {
 	        if (conn != null) {

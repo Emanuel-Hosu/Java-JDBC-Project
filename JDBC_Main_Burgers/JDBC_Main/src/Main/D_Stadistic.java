@@ -6,13 +6,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Clase que gestiona las estadísticas del sistema.
+ */
 public class D_Stadistic {
 	private Connection conn;
 
+	/**
+	 * Constructor de la clase D_Stadistic.
+	 * Inicializa la conexión a la base de datos.
+	 */
 	public D_Stadistic() {
 		conn = DatabaseConnection.getConnection();
 	}
 
+	/**
+	 * Muestra el producto más caro en la base de datos.
+	 */
 	public void expensive() {
 		String query = "SELECT * FROM alimentos ORDER BY precio_x_kg DESC LIMIT 1";
 		try (PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
@@ -22,8 +32,6 @@ public class D_Stadistic {
 				float price = rs.getFloat("precio_x_kg");
 				float stock = rs.getFloat("stock");
 				Date fecha_caducidad = rs.getDate("fecha_caducidad");
-				// System.out.println(" | " + index + ". | " + nombre + " | " + categoria + " |
-				// " + price + " | " + stock + " | " + fecha_caducidad + " | ");
 				System.out.println("Name: " + nombre + "\n - Category: " + categoria + "\n - Price per kilo: " + price
 						+ " €\n - Stock: " + stock + " KG\n - Expiration Date: " + fecha_caducidad + "\n");
 			}
@@ -32,6 +40,9 @@ public class D_Stadistic {
 		}
 	}
 
+	/**
+	 * Muestra el producto más barato en la base de datos.
+	 */
 	public void cheaper() {
 		String query = "SELECT * FROM alimentos ORDER BY precio_x_kg ASC LIMIT 1";
 		try (PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
@@ -49,6 +60,9 @@ public class D_Stadistic {
 		}
 	}
 
+	/**
+	 * Muestra las tres ventas más altas en la base de datos.
+	 */
 	public void bestSellings() {
 		String query = "SELECT * from ventas ORDER BY monto_total DESC LIMIT 3";
 		try (PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
@@ -66,6 +80,9 @@ public class D_Stadistic {
 		}
 	}
 
+	/**
+	 * Muestra el precio total del inventario.
+	 */
 	public void totalPrice() {
 		String query = "SELECT SUM(precio_x_kg * stock) AS total_inventario FROM Alimentos";
 		try (PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
@@ -78,6 +95,9 @@ public class D_Stadistic {
 		}
 	}
 
+	/**
+	 * Muestra los detalles de todas las ventas en la base de datos.
+	 */
 	public void sellDetails() {
 		String query = "SELECT * FROM detalles_venta";
 		try (PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {

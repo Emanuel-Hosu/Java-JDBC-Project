@@ -7,17 +7,29 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Clase que gestiona las ventas en el sistema.
+ */
 public class D_Sell {
 	private HashMap<Integer, Float> carrito;
 	private ArrayList<Float> stock_pair_carrito;
 	private Connection conn;
 	
+	/**
+	 * Constructor de la clase D_Sell.
+	 * Inicializa la conexión a la base de datos y las estructuras de datos para el carrito.
+	 */
 	public D_Sell() {
 		conn = DatabaseConnection.getConnection();
 		carrito = new HashMap<Integer, Float>();
 		stock_pair_carrito = new ArrayList<Float>();
 	}
 	
+	/**
+	 * Obtiene los productos de una categoría específica que no han caducado.
+	 * 
+	 * @param _category Categoría de los productos a buscar.
+	 */
 	public void getCategory(String _category) {
 		String query = "SELECT nombre, precio_x_kg FROM Alimentos WHERE categoria = ? AND fecha_caducidad > CURDATE()";
 		
@@ -43,6 +55,12 @@ public class D_Sell {
 		}
 	}
 	
+	/**
+	 * Verifica si un producto existe en la base de datos.
+	 * 
+	 * @param _productName Nombre del producto a buscar.
+	 * @return true si el producto existe, false en caso contrario.
+	 */
 	public boolean getExistProductName(String _productName) {
 		boolean encontrado = false;
 		String productName = "";
@@ -70,6 +88,12 @@ public class D_Sell {
 		}
 	}
 	
+	/**
+	 * Obtiene el ID de un producto basado en su nombre.
+	 * 
+	 * @param _name Nombre del producto.
+	 * @return ID del producto.
+	 */
 	public int getIdProductByName(String _name) {
 		String query = "SELECT id_alimento FROM Alimentos WHERE nombre = ?";
 		int id_producto = -1;
@@ -90,6 +114,12 @@ public class D_Sell {
 		return id_producto;
 	}
 	
+	/**
+	 * Obtiene el precio de un producto basado en su ID.
+	 * 
+	 * @param _idProducto ID del producto.
+	 * @return Precio del producto.
+	 */
 	public float getPriceById(int _idProducto) {
 		String query = "SELECT precio_x_kg FROM Alimentos WHERE id_alimento = ?";
 		float product_price = -1;
@@ -110,6 +140,12 @@ public class D_Sell {
 		return product_price;
 	}
 	
+	/**
+	 * Obtiene el stock de un producto basado en su ID.
+	 * 
+	 * @param _idProducto ID del producto.
+	 * @return Stock del producto.
+	 */
 	public float getStockById(int _idProducto) {
 		String query = "SELECT stock FROM Alimentos WHERE id_alimento = ?";
 		float stock_product = -1;
@@ -130,6 +166,12 @@ public class D_Sell {
 		return stock_product;
 	}
 	
+	/**
+	 * Obtiene el nombre de un producto basado en su ID.
+	 * 
+	 * @param _idProduct ID del producto.
+	 * @return Nombre del producto.
+	 */
 	public String getNameProductById(int _idProduct) {
 		String query = "SELECT nombre FROM Alimentos WHERE id_alimento = ?";
 		String nombreAlimento = "";
@@ -150,6 +192,13 @@ public class D_Sell {
 		return nombreAlimento;
 	}
 	
+	/**
+	 * Añade un producto al carrito y actualiza el stock en la base de datos.
+	 * 
+	 * @param _idProducto ID del producto.
+	 * @param _stock Cantidad de producto a añadir.
+	 * @param _subtotal Subtotal del producto.
+	 */
 	public void setCart(Integer _idProducto, float _stock, float _subtotal) {
 		String nombreAlimento = getNameProductById(_idProducto);
 		String query = "UPDATE Alimentos SET stock = stock - ? WHERE id_alimento = ?";
@@ -167,6 +216,9 @@ public class D_Sell {
 		}
 	}
 	
+	/**
+	 * Procesa la compra y registra la venta en la base de datos.
+	 */
 	public void purchaseBuy() { // UNA VEZ EL USUARIO LLAMA A ESTE METODO SIGNFICA QUE HAY QUE INSERTAR LOS DATOS EN VENTA
 		// CONSEGUIMOS EL MONTO TOTAL DE TODO LO QUE HAY EN EL CARRITO JEJE GOD
 		float montoTotal = 0; // 
@@ -191,6 +243,9 @@ public class D_Sell {
         setSellDetails();
 	}
 	
+	/**
+	 * Registra los detalles de la venta en la base de datos.
+	 */
 	public void setSellDetails() {
 	    String query = "INSERT INTO Detalles_Venta (id_venta, id_alimento, cantidad, subtotal) VALUES (?, ?, ?, ?)";
 	    
@@ -217,7 +272,11 @@ public class D_Sell {
 	    }
 	}
 
-	
+	/**
+	 * Obtiene el ID de la última venta registrada.
+	 * 
+	 * @return ID de la última venta.
+	 */
 	public int getLastSaleId() {
 	    String query = "SELECT MAX(id_venta) AS last_id FROM Ventas";
 	    int lastId = -1;

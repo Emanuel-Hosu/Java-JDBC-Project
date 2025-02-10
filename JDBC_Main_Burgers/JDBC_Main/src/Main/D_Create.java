@@ -1,25 +1,36 @@
 package Main;
 
-import java.beans.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Clase que gestiona la creación y eliminación de tablas en la base de datos.
+ */
 public class D_Create {
 
 	private Connection conn;
-	//ESTE ARRAY TIENE EL ORDEN EN EL QUE SE TIENEN QUE ELIMINAR LAS TABLAS
+	// ESTE ARRAY TIENE EL ORDEN EN EL QUE SE TIENEN QUE ELIMINAR LAS TABLAS
 	String[] tablasDelete = { "Alimentos_Proveedores", "Detalles_Pedido", "Detalles_Venta", "Pedidos", "Ventas",
 			"Proveedores", "Alimentos" };
-	//ESTE ARRAY TIENE EL ORDEN EN EL QUE SE TIENEN QUE CREAR LAS TABLAS
+	// ESTE ARRAY TIENE EL ORDEN EN EL QUE SE TIENEN QUE CREAR LAS TABLAS
 	String[] tablasCreate = { "Alimentos", "Proveedores", "Alimentos_Proveedores", "Pedidos", "Detalles_Pedido",
 			"Ventas", "Detalles_Venta" };
 
+	/**
+	 * Constructor de la clase D_Create.
+	 * Inicializa la conexión a la base de datos.
+	 */
 	public D_Create() {
 		conn = DatabaseConnection.getConnection();
 	}
 
+	/**
+	 * Ejecuta la creación o eliminación de tablas según la opción proporcionada.
+	 * 
+	 * @param opcion 1 para crear tablas, cualquier otro valor para eliminar tablas.
+	 */
 	public void system32(int opcion) {
 		if (opcion == 1) {
 			this.createTable();
@@ -28,6 +39,9 @@ public class D_Create {
 		}
 	}
 
+	/**
+	 * Elimina las tablas de la base de datos en el orden especificado.
+	 */
 	public void delete() {
 
 		for (String tabla : this.tablasDelete) {
@@ -48,7 +62,12 @@ public class D_Create {
 
 	}
 
-// METODO PARA VERIFICAR SI LAS EXISTEN
+	/**
+	 * Verifica si una tabla existe en la base de datos.
+	 * 
+	 * @param tabla Nombre de la tabla a verificar.
+	 * @return true si la tabla existe, false en caso contrario.
+	 */
 	public boolean tableExists(String tabla) {
 		String query = "SHOW TABLES LIKE ?";
 		try (PreparedStatement ps = conn.prepareStatement(query)) {
@@ -57,11 +76,14 @@ public class D_Create {
 				return rs.next();
 			}
 		} catch (SQLException e) {
-
+			// Manejo de excepciones
 		}
 		return false;
 	}
 
+	/**
+	 * Crea las tablas en la base de datos en el orden especificado.
+	 */
 	public void createTable() {
 
 		for (String tabla : this.tablasCreate) {
